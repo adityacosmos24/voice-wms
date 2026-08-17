@@ -6,8 +6,8 @@ import { Button } from '../components/common/Button';
 import { cn } from '../components/common/Button';
 import { commandService } from '../services/api';
 
-const DEV_SESSION_ID = 'session-123';
-const DEV_USER_ID = '3d387cc0-ea7d-4180-a611-e6e737158be8'; 
+const DEV_SESSION_ID = '000000000000000000000003';
+const DEV_USER_ID = '000000000000000000000001';
 
 export function VoiceTerminalPage() {
   const { isRecording, isProcessing, startRecording, stopRecording } = useVoice(DEV_SESSION_ID);

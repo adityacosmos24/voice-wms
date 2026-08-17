@@ -31,6 +31,13 @@ const locationSchema = new mongoose.Schema({
   zone: { type: String },
 }, { timestamps: true });
 
+const sessionSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  warehouseId: { type: mongoose.Schema.Types.ObjectId, required: true },
+  deviceId: { type: String },
+  endedAt: { type: Date },
+}, { timestamps: true });
+
 const inventorySchema = new mongoose.Schema({
   warehouseId: { type: mongoose.Schema.Types.ObjectId, required: true },
   skuId: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -48,6 +55,7 @@ async function seed() {
   const Sku = mongoose.models.Sku || mongoose.model('Sku', skuSchema);
   const Location = mongoose.models.Location || mongoose.model('Location', locationSchema);
   const Inventory = mongoose.models.Inventory || mongoose.model('Inventory', inventorySchema);
+  const Session = mongoose.models.Session || mongoose.model('Session', sessionSchema);
 
   console.log('Clearing old data...');
   await User.deleteMany({});
@@ -55,26 +63,44 @@ async function seed() {
   await Sku.deleteMany({});
   await Location.deleteMany({});
   await Inventory.deleteMany({});
+  await Session.deleteMany({});
 
   console.log('Seeding data...');
 
+  const DEV_USER_ID = '000000000000000000000001';
+  const DEV_WH_ID = '000000000000000000000002';
+  const DEV_SESSION_ID = '000000000000000000000003';
+
+  // Create Warehouse
+  const wh = await Warehouse.create({
+    _id: DEV_WH_ID,
+    name: 'Main Distribution Center',
+    location: 'Chicago, IL',
+  });
+
   // Create Users
   const admin = await User.create({
+    _id: DEV_USER_ID,
     username: 'admin',
+    name: 'Rajesh Kumar',
     password: 'password123',
-    role: 'SUPER_ADMIN',
+    role: 'admin',
+    warehouseId: DEV_WH_ID,
   });
 
   const worker = await User.create({
     username: 'worker1',
+    name: 'Worker 1',
     password: 'password123',
-    role: 'WAREHOUSE_WORKER',
+    role: 'picker',
+    warehouseId: DEV_WH_ID,
   });
 
-  // Create Warehouse
-  const wh = await Warehouse.create({
-    name: 'Main Distribution Center',
-    location: 'Chicago, IL',
+  // Create Session
+  await Session.create({
+    _id: DEV_SESSION_ID,
+    userId: DEV_USER_ID,
+    warehouseId: DEV_WH_ID,
   });
 
   // Create Locations

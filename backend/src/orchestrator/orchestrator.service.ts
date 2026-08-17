@@ -75,8 +75,8 @@ export class OrchestratorService {
     // 2. Extract Intent
     const context = await this.warehouseService.buildSessionContext(
       sessionId,
-      session.userId.toString(),
-      session.warehouseId.toString(),
+      (session.userId as any).id,
+      (session.warehouseId as any).id,
     );
     const parsedIntent = await this.intentService.extractIntent(
       transcriptResult.text,
@@ -86,7 +86,12 @@ export class OrchestratorService {
     // Override STT confidence from Deepgram
     parsedIntent.confidence = transcriptResult.overallConfidence;
 
-    return this.processCommandBase(sessionId, transcriptResult.text, parsedIntent);
+    return this.processCommandBase(
+      sessionId,
+      transcriptResult.text,
+      parsedIntent,
+      transcriptResult.overallConfidence
+    );
   }
 
   /**
@@ -96,16 +101,18 @@ export class OrchestratorService {
     sessionId: string,
     transcript: string,
     preParsedIntent: ParsedIntent | null,
+    sttConfidence?: number,
   ) {
     const session = await this.sessionService.getSession(sessionId);
-    const userId = session.userId.toString();
-    const warehouseId = session.warehouseId.toString();
+    const userId = (session.userId as any).id;
+    const warehouseId = (session.warehouseId as any).id;
 
     // 1. Create command record (status: received)
     const command = new this.commandModel({
       sessionId,
       transcript,
       status: CommandStatus.RECEIVED,
+      sttConfidence,
     });
     await command.save();
 

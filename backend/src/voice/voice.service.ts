@@ -35,7 +35,6 @@ export class VoiceService {
         {
           model: 'nova-3',
           smart_format: true,
-          mimetype,
         }
       );
 

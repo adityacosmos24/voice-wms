@@ -6,7 +6,7 @@ import { Location } from './location.schema';
 
 export type InventoryDocument = Inventory & Document;
 
-@Schema({ timestamps: true, collection: 'inventory' })
+@Schema({ timestamps: true, collection: 'inventories' })
 export class Inventory {
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Warehouse', required: true })
   warehouseId: Warehouse | string;

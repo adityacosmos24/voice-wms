@@ -17,7 +17,7 @@ export function DashboardPage() {
     const fetchCommands = async () => {
       try {
         const data = await commandService.getFeed();
-        setCommands(data.commands || []);
+        setCommands(data.items || []);
       } catch (err) {
         console.error('Failed to fetch feed', err);
       } finally {

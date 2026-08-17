@@ -5,7 +5,7 @@ import { VoiceTerminalPage } from './pages/VoiceTerminalPage';
 import { useSocketStore } from './services/socket';
 
 // Hardcoded dev user (Rajesh Kumar - Admin)
-const DEV_USER_ID = '3d387cc0-ea7d-4180-a611-e6e737158be8'; 
+const DEV_USER_ID = '000000000000000000000001';
 
 function App() {
   const [currentPath, setCurrentPath] = useState('/');

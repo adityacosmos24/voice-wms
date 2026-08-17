@@ -51,8 +51,8 @@ export class SessionService {
     await session.save();
 
     return this.sessionModel.findById(session._id)
-      .populate('user', 'name role')
-      .populate('warehouse', 'name')
+      .populate('userId', 'name role')
+      .populate('warehouseId', 'name')
       .exec();
   }
 
@@ -72,14 +72,14 @@ export class SessionService {
    */
   async getActiveSession(userId: string) {
     return this.sessionModel.findOne({ userId, endedAt: { $exists: false } }) // Try checking for non-existent field
-      .populate('user', 'name role')
-      .populate('warehouse', 'name')
+      .populate('userId', 'name role')
+      .populate('warehouseId', 'name')
       .exec()
       .then(async (doc) => {
         if (!doc) {
            return this.sessionModel.findOne({ userId, endedAt: null }) // Fallback to checking for null field
-             .populate('user', 'name role')
-             .populate('warehouse', 'name')
+             .populate('userId', 'name role')
+             .populate('warehouseId', 'name')
              .exec();
         }
         return doc;
@@ -91,8 +91,8 @@ export class SessionService {
    */
   async getSession(sessionId: string) {
     const session = await this.sessionModel.findById(sessionId)
-      .populate('user', 'name role')
-      .populate('warehouse', 'name')
+      .populate('userId', 'name role')
+      .populate('warehouseId', 'name')
       .exec();
       
     if (!session) {
